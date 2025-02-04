@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 from dotenv import load_dotenv
 from datetime import datetime
 import csv
+from webscraper import scrape_urls
 
 load_dotenv()
 
@@ -19,7 +20,7 @@ def read_cars_csv(file_path):
     cars_list = []
 
     with open(file_path, mode='r', newline='', encoding='utf-8') as file:
-        reader = csv.DictReader(file, delimiter='\t')  # Assuming tab-separated values
+        reader = csv.DictReader(file, delimiter=',')  # Assuming tab-separated values
         for row in reader:
             car_dict = {
                 'brand': row['BRAND'],
@@ -50,20 +51,11 @@ def build_search_url(car):
     return f"{base_path}?{urlencode(query_params)}"
 
 
-def scrape_listing_urls(search_url):
-    """Placeholder for actual scraping logic - returns dummy data"""
-    # TODO: Replace with actual web scraping logic using requests/BeautifulSoup
-    print(f"Scraping URL: {search_url}")
-    return [
-        "https://www.standvirtual.com/carros/example-listing-1",
-        "https://www.standvirtual.com/carros/example-listing-2"
-    ]
-
 
 def send_email_notification(new_listings):
     """Sends email notification via Gmail SMTP"""
-    subject = "New Car Listings Found on StandVirtual"
-    body = "New listings found:\n\n" + "\n".join(new_listings)
+    subject = "New Car Listings Found that Match Your Criteria"
+    body = "\n".join([f"{listing['name']} - {listing['price']}€ - {listing['mileage']} km - {listing['year']} - {listing['url']}" for listing in new_listings])
     message = f"Subject: {subject}\n\n{body}"
 
     try:
@@ -92,27 +84,23 @@ def check_listings():
     except FileNotFoundError:
         raise FileNotFoundError(f"File {CARS_FILE} not found")
 
-    new_listings = set()
-
     # Process each car search
-    for car in CARS:
-        search_url = build_search_url(car)
-        try:
-            listing_urls = scrape_listing_urls(search_url)
-            for url in listing_urls:
-                if url not in seen and url not in new_listings:
-                    new_listings.add(url)
-        except Exception as e:
-            print(f"Error processing {car['brand']} {car['model']}: {e}")
-            continue
+    url_list = [build_search_url(car) for car in CARS]
+    try:
+        listings_info = scrape_urls(url_list)
+        new_listings = [listing for listing in listings_info if listing['url'] not in seen]
+    except Exception as e:
+        print(f"Error scraping listings: {e}")
+        return
 
     # Process new listings
     if new_listings:
+        new_listings = list({frozenset(d.items()): d for d in new_listings}.values())
         print(f"Found {len(new_listings)} new listings")
         send_email_notification(new_listings)
 
         # Update seen listings
-        seen.update(new_listings)
+        seen.update(listing['url'] for listing in new_listings)
         with open(SEEN_FILE, 'w') as f:
             f.write("\n".join(seen))
         print("Updated seen listings file")
