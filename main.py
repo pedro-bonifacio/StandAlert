@@ -30,7 +30,8 @@ def read_cars_csv(file_path):
                 'from_mileage': int(row['MILEAGE_FROM']),
                 'to_mileage': int(row['MILEAGE_TO']),
                 'from_price': int(row['PRICE_FROM']),
-                'to_price': int(row['PRICE_TO'])
+                'to_price': int(row['PRICE_TO']),
+                'tax_deductible': int(row['TAX_DEDUCTIBLE'])
             }
             cars_list.append(car_dict)
 
@@ -45,7 +46,8 @@ def build_search_url(car):
         'search[filter_float_mileage:from]': car['from_mileage'],
         'search[filter_float_mileage:to]': car['to_mileage'],
         'search[filter_float_price:from]': car['from_price'],
-        'search[filter_float_price:to]': car['to_price']
+        'search[filter_float_price:to]': car['to_price'],
+        'search[filter_enum_tax_deductible]': car['tax_deductible'],
     }
 
     return f"{base_path}?{urlencode(query_params)}"
