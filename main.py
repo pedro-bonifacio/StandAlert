@@ -3,17 +3,17 @@ import smtplib
 from apscheduler.schedulers.blocking import BlockingScheduler
 from urllib.parse import urlencode
 from dotenv import load_dotenv
-from datetime import datetime
 import csv
 from webscraper import scrape_urls
 
 load_dotenv()
 
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD") # GMail App Password
+SENDER_PASSWORD = os.getenv("SENDER_GMAIL_APP_PASSWORD") # GMail App Password
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
 SEEN_FILE = "seen_listings.txt"
 CARS_FILE = "cars.csv"
+CHECK_INTERVAL = 30  # minutes
 
 
 def read_cars_csv(file_path):
@@ -72,8 +72,7 @@ def send_email_notification(new_listings):
 def check_listings():
     """Main job function to check for new listings"""
     # print date and time of execution
-    print(f"{datetime.now().strftime("%d-%m-%Y %H:%M:%S")} - Starting listing check...")
-
+    print(f"Starting listing check...")
     # Read seen listings
     try:
         with open(SEEN_FILE, 'r') as f:
@@ -114,7 +113,7 @@ def check_listings():
 if __name__ == "__main__":
     # Initialize scheduler
     scheduler = BlockingScheduler()
-    scheduler.add_job(check_listings, 'cron', minute='*/30')
+    scheduler.add_job(check_listings, 'cron', minute=f'*/{CHECK_INTERVAL}')
 
     print("Starting scheduler...")
     try:

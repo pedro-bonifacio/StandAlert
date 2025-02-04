@@ -1,3 +1,4 @@
 .env
 .venv/
 /.idea/
+seen_listings.txt
