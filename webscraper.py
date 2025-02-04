@@ -12,15 +12,15 @@ def extract_numbers(s):
     return int(''.join(findall(r'\d+', s)))
 
 def scrape_urls(url_list):
-    # display = Display(visible=True, size=(1600, 1200))
-    # display.start()
-    driver = webdriver.Chrome()
+    display = Display(visible=False, size=(1600, 1200))
+    display.start()
+    cService = webdriver.ChromeService(executable_path="/usr/bin/chromedriver")
+    driver = webdriver.Chrome(service=cService)
     extracted_data = []  # List to store results
 
     try:
         for url in url_list:
             driver.get(url)
-
             try:
                 WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.TAG_NAME, 'body'))

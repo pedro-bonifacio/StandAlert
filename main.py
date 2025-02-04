@@ -112,7 +112,7 @@ def check_listings():
 if __name__ == "__main__":
     # Initialize scheduler
     scheduler = BlockingScheduler()
-    scheduler.add_job(check_listings, 'cron', minute='*/1')
+    scheduler.add_job(check_listings, 'cron', minute='*/30')
 
     print("Starting scheduler...")
     try:
