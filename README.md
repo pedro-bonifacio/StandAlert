@@ -36,7 +36,7 @@ Ensure your Raspberry Pi has the following installed:
    ```sh
    uv venv
    source .venv/bin/activate
-   uv pip sync
+   uv sync
    ```
 
 ## Running as a Systemd Service (Automated Execution)
