@@ -83,7 +83,7 @@ To run StandAlert as a background service:
 ## Setting Up Email Notifications
 To receive email notifications:
 1. Obtain a **GMail App Password** (if using Gmail SMTP).
-2. Edit the `.env` file in the project directory with:
+2. Create a `.env` file in the project root directory with:
    ```sh
     SENDER_EMAIL=youremail@gmail.com
     RECEIVER_EMAIL=youremail@gmail.com
