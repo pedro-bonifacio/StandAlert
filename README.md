@@ -18,19 +18,19 @@ Ensure your Raspberry Pi has the following installed:
 - `UV` (Python package and project manager - recommended)
 
 ### Installation Steps
-1. **Clone the repository**
-   ```sh
-   git clone https://github.com/pedro-bonifacio/StandAlert.git
-   cd StandAlert
-   ```
-2. **Install Chromium WebDriver**
+1. **Install Chromium WebDriver**
    ```sh
    sudo apt-get install chromium-chromedriver
    ```
    - Ensure that `chromedriver` is located at `/usr/bin/chromedriver`. If not, update the `executable_path` in `scrape_urls` function inside `webscraper.py`.
-3. **Install Xvfb for headless operation**
+2. **Install Xvfb for headless operation**
    ```sh
    sudo apt install xvfb
+   ```
+3. **Clone the repository**
+   ```sh
+   git clone https://github.com/pedro-bonifacio/StandAlert.git
+   cd StandAlert
    ```
 4. **Set up virtual environment using UV**
    ```sh
