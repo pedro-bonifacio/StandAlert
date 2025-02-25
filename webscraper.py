@@ -51,5 +51,6 @@ def scrape_urls(url_list):
 
     finally:
         driver.quit()
+        display.stop()
 
     return extracted_data
